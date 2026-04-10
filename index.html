@@ -1,11 +1,269 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="UTF-8"><title>Test formulaire</title></head>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fiche client — Hotel des Champs-Elysees</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant+SC:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --gold: #B89A5A; --gold-light: #D4BA82; --gold-pale: #F5EDD8; --dark: #1A1714; --mid: #3D3830; --muted: #8C7F6E; --bg: #FAF8F4; --white: #FFFFFF; --border: #E2D9C8; --radius: 2px; }
+  body { background: var(--bg); font-family: 'Jost', sans-serif; font-weight: 300; color: var(--dark); min-height: 100vh; padding: 0; }
+  .header { background: var(--dark); padding: 1.5rem 2rem 1.25rem; text-align: center; position: relative; overflow: hidden; }
+  .header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,154,90,0.03) 40px, rgba(184,154,90,0.03) 41px); }
+  .header-ornament { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.25rem; }
+  .header-ornament .line { height: 0.5px; width: 60px; background: var(--gold); opacity: 0.6; }
+  .header-ornament .diamond { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); }
+  .hotel-name { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-variant-numeric: lining-nums; font-size: clamp(1.6rem, 5vw, 2.4rem); color: var(--white); letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.2; }
+  .header-tagline { margin-top: 1rem; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.25em; text-transform: uppercase; }
+  .main { max-width: 620px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .intro-card { border: 0.5px solid var(--gold); background: var(--gold-pale); padding: 1.25rem 1.5rem; margin-bottom: 2.5rem; border-radius: var(--radius); }
+  .intro-card p { font-family: 'Cormorant Garamond', serif; font-style: normal; font-size: 1rem; color: var(--mid); line-height: 1.7; text-align: center; }
+  .section { margin-bottom: 2rem; }
+  .section-title { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+  .section-title::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .field-row.single { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+  .field input[type="text"], .field input[type="email"], .field input[type="tel"], .field input[type="date"] { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.92rem; font-weight: 300; color: var(--dark); transition: border-color 0.2s; outline: none; width: 100%; }
+  .field input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,154,90,0.08); }
+  .field input.error { border-color: #C0392B; }
+  .field input::placeholder { color: #C5BAA8; font-style: italic; }
+  .field textarea { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.92rem; font-weight: 300; color: var(--dark); width: 100%; min-height: 110px; resize: vertical; outline: none; transition: border-color 0.2s; line-height: 1.6; }
+  .field textarea::placeholder { color: #C5BAA8; font-style: italic; }
+  .field textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,154,90,0.08); }
+  .checkbox-label { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; font-size: 0.88rem; color: var(--mid); font-weight: 300; line-height: 1.5; }
+  input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; min-width: 16px; flex-shrink: 0; border: 0.5px solid var(--gold); border-radius: 2px; background: var(--white); cursor: pointer; position: relative; transition: background 0.2s; margin-top: 2px; }
+  input[type="checkbox"]:checked { background: var(--gold); }
+  input[type="checkbox"]:checked::after { content: ''; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: 1.5px solid var(--white); border-top: none; border-left: none; transform: rotate(45deg); }
+  input[type="checkbox"].error { border-color: #C0392B; }
+  .accompagnant-card { background: var(--white); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .accompagnant-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .accompagnant-num { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
+  .remove-btn { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 0; line-height: 1; }
+  .remove-btn:hover { color: #C0392B; }
+  .add-btn { background: transparent; border: 0.5px solid var(--gold); color: var(--gold); font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.5rem 1.25rem; border-radius: var(--radius); cursor: pointer; margin-top: 0.5rem; }
+  .add-btn:hover { background: var(--gold-pale); }
+  .rgpd-section { margin-bottom: 2rem; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; background: var(--white); }
+  .rgpd-text { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
+  .rgpd-text a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+  .rgpd-required { font-size: 0.7rem; color: #C0392B; margin-top: 0.4rem; display: none; }
+  .submit-area { margin-top: 2.5rem; text-align: center; }
+  .submit-btn { background: var(--dark); color: var(--gold-light); border: none; padding: 1rem 3rem; font-family: 'Jost', sans-serif; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; cursor: pointer; border-radius: var(--radius); transition: background 0.2s, transform 0.1s; }
+  .submit-btn:hover { background: var(--mid); }
+  .submit-btn:active { transform: scale(0.98); }
+  .error-msg { display: none; color: #C0392B; font-size: 0.75rem; margin-top: 0.75rem; letter-spacing: 0.05em; }
+  .success-block { display: none; text-align: center; padding: 3rem 2rem; }
+  .success-icon { width: 64px; height: 64px; border: 0.5px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--dark); margin-bottom: 1rem; }
+  .success-text { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 400px; margin: 0 auto; }
+  .footer { text-align: center; padding: 1.5rem; border-top: 0.5px solid var(--border); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; }
+  .footer a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } .header { padding: 2rem 1.5rem; } }
+</style>
+</head>
 <body>
-<form name="fiche-client" method="POST" data-netlify="true">
-  <input type="hidden" name="form-name" value="fiche-client" />
-  <input type="text" name="nom" placeholder="Nom" />
-  <button type="submit">Envoyer</button>
+
+<form name="fiche-client" data-netlify="true" hidden>
+  <input type="text" name="nom" />
+  <input type="text" name="prenom" />
+  <input type="text" name="nationalite" />
+  <input type="text" name="passeport" />
+  <input type="email" name="email" />
+  <input type="tel" name="tel" />
+  <input type="date" name="arrivee" />
+  <input type="date" name="depart" />
+  <input type="text" name="avec-accompagnants" />
+  <input type="text" name="affaires" />
+  <input type="text" name="societe" />
+  <input type="text" name="facture-societe" />
+  <textarea name="demandes"></textarea>
+  <input type="text" name="rgpd" />
 </form>
+
+<header class="header">
+  <div class="header-ornament">
+    <span class="line"></span><span class="diamond"></span><span class="line"></span>
+  </div>
+  <div class="hotel-name">
+    Hotel des Champs-Elysees
+    <span style="font-style:normal; font-size:0.6em; letter-spacing:0.18em; color:var(--gold-light); display:block; margin-top:0.3rem; font-family:'Cormorant SC',serif; font-variant-numeric:lining-nums;">2 rue d'Artois &mdash; 75008 Paris</span>
+  </div>
+  <p class="header-tagline">Pre-enregistrement client</p>
+</header>
+
+<main class="main">
+
+  <div class="intro-card" id="intro-card">
+    <p>Afin de preparer au mieux votre arrivee, merci de completer ce formulaire.<br>Vos informations resteront strictement confidentielles.</p>
+  </div>
+
+  <form name="fiche-client" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" id="main-form">
+    <input type="hidden" name="form-name" value="fiche-client" />
+    <div style="display:none;"><label>Ne pas remplir : <input name="bot-field" /></label></div>
+
+    <div class="section">
+      <div class="section-title">Identite</div>
+      <div class="field-row">
+        <div class="field"><label for="nom">Nom</label><input type="text" id="nom" name="nom" placeholder="Dupont" autocomplete="family-name" /></div>
+        <div class="field"><label for="prenom">Prenom</label><input type="text" id="prenom" name="prenom" placeholder="Marie" autocomplete="given-name" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="nationalite">Nationalite</label><input type="text" id="nationalite" name="nationalite" placeholder="Francaise" /></div>
+        <div class="field"><label for="passeport">Numero de passeport ou CNI</label><input type="text" id="passeport" name="passeport" placeholder="12AB34567" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Contact</div>
+      <div class="field-row single"><div class="field"><label for="email">Adresse e-mail</label><input type="email" id="email" name="email" placeholder="marie.dupont@email.com" autocomplete="email" /></div></div>
+      <div class="field-row single"><div class="field"><label for="tel">Telephone portable</label><input type="tel" id="tel" name="tel" placeholder="+33 6 12 34 56 78" autocomplete="tel" /></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Sejour</div>
+      <div class="field-row">
+        <div class="field"><label for="arrivee">Date d'arrivee</label><input type="date" id="arrivee" name="arrivee" /></div>
+        <div class="field"><label for="depart">Date de depart</label><input type="date" id="depart" name="depart" /></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Accompagnants</div>
+      <label class="checkbox-label">
+        <input type="checkbox" id="avec-accompagnants" name="avec-accompagnants" value="Oui" />
+        <strong>D'autres personnes voyagent avec moi</strong>
+      </label>
+      <div id="accompagnants-container" style="display:none; margin-top:1.25rem;">
+        <div id="accompagnants-list"></div>
+        <button type="button" class="add-btn" id="btn-ajouter">+ Ajouter un accompagnant</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Motif du sejour</div>
+      <label class="checkbox-label">
+        <input type="checkbox" id="affaires" name="affaires" value="Oui" />
+        <strong>Voyage d'affaires</strong>
+      </label>
+      <div id="affaires-container" style="display:none; margin-top:1.25rem;">
+        <div class="accompagnant-card">
+          <div class="field-row single" style="margin-bottom:1rem;">
+            <div class="field"><label for="societe">Nom de la societe</label><input type="text" id="societe" name="societe" placeholder="Acme SAS" /></div>
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" id="facture-societe" name="facture-societe" value="Oui" />
+            Je souhaite une facture au nom de la societe
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Demandes particulieres</div>
+      <div class="field"><textarea name="demandes" id="demandes" placeholder="Ex : deux lits separes, regime alimentaire particulier, lit bebe..."></textarea></div>
+    </div>
+
+    <div class="rgpd-section">
+      <p class="rgpd-text">
+        Conformement au Reglement General sur la Protection des Donnees (RGPD) et a la loi Informatique et Libertes, les informations collectees via ce formulaire sont destinees exclusivement a l'Hotel des Champs-Elysees aux fins de gestion de votre reservation et de votre sejour. Elles sont conservees pendant une duree de 3 ans a compter de votre dernier sejour, puis supprimees. Vous disposez d'un droit d'acces, de rectification, d'effacement et de portabilite de vos donnees, ainsi que d'un droit d'opposition a leur traitement, en contactant la reception a l'adresse contact@hoteldce.com. Pour en savoir plus, consultez notre <a href="politique.html" target="_blank">politique de confidentialite</a>.
+      </p>
+      <label class="checkbox-label">
+        <input type="checkbox" id="rgpd" name="rgpd" value="Consentement donne" />
+        <span>J'ai lu et j'accepte la <a href="politique.html" target="_blank">politique de confidentialite</a> de l'Hotel des Champs-Elysees et je consens au traitement de mes donnees personnelles aux fins decrites ci-dessus. <strong>*</strong></span>
+      </label>
+      <p class="rgpd-required" id="rgpd-error">Vous devez accepter la politique de confidentialite pour continuer.</p>
+    </div>
+
+    <div class="submit-area">
+      <button type="button" class="submit-btn" id="btn-submit">Envoyer ma fiche</button>
+      <p class="error-msg" id="error-msg">Veuillez remplir tous les champs obligatoires avant de continuer.</p>
+    </div>
+
+  </form>
+
+  <div class="success-block" id="success-block">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#B89A5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2 class="success-title">Merci, votre fiche est enregistree.</h2>
+    <div style="display:flex; align-items:center; justify-content:center; gap:1rem; width:120px; margin:1.5rem auto;">
+      <span style="height:0.5px; flex:1; background:var(--gold); opacity:0.4;"></span>
+      <span style="width:5px; height:5px; background:var(--gold); transform:rotate(45deg); display:block;"></span>
+      <span style="height:0.5px; flex:1; background:var(--gold); opacity:0.4;"></span>
+    </div>
+    <p class="success-text">Notre equipe a bien recu vos informations et se prepare a vous accueillir dans les meilleures conditions. Au plaisir de vous recevoir tres prochainement.</p>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Hotel des Champs-Elysees &nbsp;&middot;&nbsp; Paris &nbsp;&middot;&nbsp; <a href="politique.html" target="_blank">Politique de confidentialite</a>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var compteur = 0;
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('arrivee').min = today;
+  document.getElementById('depart').min = today;
+  document.getElementById('arrivee').addEventListener('change', function() {
+    document.getElementById('depart').min = this.value;
+    if (document.getElementById('depart').value < this.value) document.getElementById('depart').value = '';
+  });
+  document.getElementById('avec-accompagnants').addEventListener('change', function() {
+    document.getElementById('accompagnants-container').style.display = this.checked ? 'block' : 'none';
+    if (this.checked && document.getElementById('accompagnants-list').children.length === 0) ajouterAccompagnant();
+  });
+  document.getElementById('affaires').addEventListener('change', function() {
+    document.getElementById('affaires-container').style.display = this.checked ? 'block' : 'none';
+    if (!this.checked) { document.getElementById('societe').value = ''; document.getElementById('facture-societe').checked = false; }
+  });
+  document.getElementById('btn-ajouter').addEventListener('click', function() { ajouterAccompagnant(); });
+  function ajouterAccompagnant() {
+    compteur++;
+    var n = compteur;
+    var card = document.createElement('div');
+    card.className = 'accompagnant-card';
+    card.id = 'acc-' + n;
+    card.innerHTML = '<div class="accompagnant-header"><span class="accompagnant-num">Accompagnant ' + n + '</span><button type="button" class="remove-btn" data-id="' + n + '">&#x2715;</button></div><div class="field-row"><div class="field"><label>Nom</label><input type="text" name="acc-nom-' + n + '" placeholder="Dupont" /></div><div class="field"><label>Prenom</label><input type="text" name="acc-prenom-' + n + '" placeholder="Jean" /></div></div><div class="field-row"><div class="field"><label>Nationalite</label><input type="text" name="acc-nat-' + n + '" placeholder="Francaise" /></div><div class="field"><label>N de passeport ou CNI</label><input type="text" name="acc-doc-' + n + '" placeholder="12AB34567" /></div></div>';
+    document.getElementById('accompagnants-list').appendChild(card);
+    card.querySelector('.remove-btn').addEventListener('click', function() { card.remove(); });
+  }
+  document.getElementById('btn-submit').addEventListener('click', function() {
+    var ids = ['nom', 'prenom', 'nationalite', 'passeport', 'email', 'tel', 'arrivee', 'depart'];
+    var valid = true;
+    ids.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el.value.trim()) { el.classList.add('error'); valid = false; } else el.classList.remove('error');
+    });
+    if (document.getElementById('avec-accompagnants').checked) {
+      document.querySelectorAll('.accompagnant-card input[type="text"]').forEach(function(inp) {
+        if (!inp.value.trim()) { inp.classList.add('error'); valid = false; } else inp.classList.remove('error');
+      });
+    }
+    if (document.getElementById('affaires').checked) {
+      var s = document.getElementById('societe');
+      if (!s.value.trim()) { s.classList.add('error'); valid = false; } else s.classList.remove('error');
+    }
+    var rgpd = document.getElementById('rgpd');
+    if (!rgpd.checked) { rgpd.classList.add('error'); document.getElementById('rgpd-error').style.display = 'block'; valid = false; }
+    else { rgpd.classList.remove('error'); document.getElementById('rgpd-error').style.display = 'none'; }
+    if (!valid) { document.getElementById('error-msg').style.display = 'block'; return; }
+    var formData = new FormData(document.getElementById('main-form'));
+    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(formData).toString() })
+      .then(function() { afficherSucces(); }).catch(function() { afficherSucces(); });
+  });
+  function afficherSucces() {
+    document.getElementById('intro-card').style.display = 'none';
+    document.getElementById('main-form').style.display = 'none';
+    var s = document.getElementById('success-block');
+    s.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+</script>
 </body>
 </html>
